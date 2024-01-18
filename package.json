@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:functions": "supabase functions serve",
+    "start:app": "pnpm -r --filter apollo-frontend start",
+    "start": "pnpm run \"/start:.*/\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
