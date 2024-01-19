@@ -1,6 +1,9 @@
 import { Component } from "solid-js";
 import { NewsletterEntry } from "../lib/types";
 import { Chip } from "./Chip";
+import { CgWebsite } from "solid-icons/cg";
+import { AiOutlineTag } from "solid-icons/ai";
+import { BiRegularDollarCircle } from "solid-icons/bi";
 
 export const Entry: Component<{
   entry: NewsletterEntry;
@@ -13,7 +16,11 @@ export const Entry: Component<{
         <div>
           <div class={"-ml-1 md:float-right md:ml-3"}>
             {props.entry.sponsor && (
-              <Chip colorClass="bg-red" text="Sponsored" />
+              <Chip
+                colorClass="bg-red"
+                text="Sponsored"
+                leftSection={<BiRegularDollarCircle class={"mr-0.5 inline"} />}
+              />
             )}
             {props.entry.web_dev && (
               <Chip colorClass="bg-green" text="WebDev" />
@@ -26,7 +33,8 @@ export const Entry: Component<{
           <h1 class={"text-2xl"}>{props.entry.title.replace(/\(.*\)$/, "")}</h1>
         </div>
         <p class={"mt-1"}>{props.entry.description}</p>
-        <p class={"mt-3 font-semibold"}>
+        <p class={"mt-3 flex items-center font-semibold"}>
+          <CgWebsite class={"mr-1"} />
           {new URL(props.entry.url).hostname
             .replace(/^www\./, "")
             .split(".")
@@ -35,7 +43,12 @@ export const Entry: Component<{
         </p>
         <div class="-ml-1 mt-1 flex flex-wrap">
           {props.entry.tags.map((tag) => (
-            <Chip colorClass="bg-mauve" class="mr-1" text={tag} />
+            <Chip
+              colorClass="bg-mauve"
+              class="mr-1"
+              text={tag}
+              leftSection={<AiOutlineTag class={"mr-1 inline"} />}
+            />
           ))}
         </div>
       </a>
