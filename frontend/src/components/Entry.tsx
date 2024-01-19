@@ -25,10 +25,12 @@ export const Entry: Component<{
             {props.entry.web_dev && (
               <Chip colorClass="bg-green" text="WebDev" />
             )}
-            <Chip
-              text={props.entry.title.match(/\((.*)\)/)[1]}
-              colorClass={"bg-blue"}
-            />
+            {!props.entry.sponsor && (
+              <Chip
+                text={props.entry.title.match(/\((.*)\)/)[1]}
+                colorClass={"bg-blue"}
+              />
+            )}
           </div>
           <h1 class={"text-2xl"}>{props.entry.title.replace(/\(.*\)$/, "")}</h1>
         </div>
