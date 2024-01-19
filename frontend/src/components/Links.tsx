@@ -4,6 +4,7 @@ import { NewsletterEntry } from "../lib/types";
 import { Entry } from "./Entry";
 import { CgSpinner } from "solid-icons/cg";
 import { VsDebugDisconnect } from "solid-icons/vs";
+import { isToday } from "date-fns";
 
 const getMostRecentEntries = async () => {
   const { data, error } = await supabase
@@ -66,9 +67,20 @@ export const Links: Component = () => {
           <p class={"text-xl"}>{errorMessage()}</p>
         </div>
       ) : (
-        <For each={entries()} fallback={<h1>No entries found :(</h1>}>
-          {(entry) => <Entry entry={entry} />}
-        </For>
+        <>
+          {!isToday(entries()?.[0]?.created_at) && (
+            <div class={"border-peach rounded-xl border-2 p-3 text-center"}>
+              <p class={"mt-1 text-lg"}>
+                The entries you see below are from{" "}
+                {new Date(entries()[0].created_at).toLocaleDateString()}, which
+                (according to your computer) is not today.
+              </p>
+            </div>
+          )}
+          <For each={entries()} fallback={<h1>No entries found :(</h1>}>
+            {(entry) => <Entry entry={entry} />}
+          </For>
+        </>
       )}
     </div>
   );
