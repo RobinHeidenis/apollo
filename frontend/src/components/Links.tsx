@@ -9,7 +9,8 @@ import { isToday } from "date-fns";
 const getMostRecentEntries = async () => {
   const { data, error } = await supabase
     .rpc("get_most_recent_entries")
-    .order("id", { ascending: false });
+    .order("web_dev", { ascending: true })
+    .order("id", { ascending: true });
 
   if (error) {
     throw error;
