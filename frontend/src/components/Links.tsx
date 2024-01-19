@@ -71,7 +71,7 @@ export const Links: Component = () => {
         <>
           {!isToday(entries()?.[0]?.created_at) && (
             <div class={"border-peach rounded-xl border-2 p-3 text-center"}>
-              <p class={"mt-1 text-lg"}>
+              <p class={"text-lg"}>
                 The entries you see below are from{" "}
                 {new Date(entries()[0].created_at).toLocaleDateString()}, which
                 (according to your computer) is not today.
