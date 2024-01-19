@@ -8,14 +8,11 @@ export const Links: Component = () => {
 
   createEffect(async () => {
     try {
-      const { data, error, status } = await supabase
-        .from("links")
-        .select("created_at, url, title, description, sponsor, web_dev, tags")
-        .order("created_at", { ascending: false })
-        .order("id", { ascending: false })
-        .limit(50);
+      const { data, error } = await supabase
+        .rpc("get_most_recent_entries")
+        .order("id", { ascending: false });
 
-      if (error && status !== 406) {
+      if (error) {
         throw error;
       }
 
