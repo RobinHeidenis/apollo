@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",
+    "date-fns": "^3.2.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.7.6"
   }
