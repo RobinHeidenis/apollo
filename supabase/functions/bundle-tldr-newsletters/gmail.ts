@@ -6,17 +6,23 @@ import {
 } from "npm:date-fns@3.0.6";
 import { ListMessagesResponse, Message } from "../_shared/types.ts";
 
-export const getGmailMessages = async (accessToken: string) => {
-  const url = `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=from:dan@tldrnewsletter.com after:${getUnixTime(
-    addHours(startOfToday(), 10),
-  )} before:${getUnixTime(addHours(startOfToday(), 15))}`;
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
+export const getGmailMessages = async (
+  accessToken: string,
+) => {
+  const url =
+    `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=from:dan@tldrnewsletter.com after:${
+      getUnixTime(addHours(startOfToday(), 10))
+    } before:${getUnixTime(addHours(startOfToday(), 15))}`;
+  const res = await fetch(
+    url,
+    {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
     },
-  });
-  const json = (await res.json()) as ListMessagesResponse;
+  );
+  const json = await res.json() as ListMessagesResponse;
 
   if (!json.messages) {
     throw new Error("Received no messages from Gmail");
