@@ -19,23 +19,43 @@ const addEntriesToSupabase = async (
   entries: EntryWithTags[],
 ) => {
   const { error } = await supabase.from("links").insert(
-    entries.map((entry) => {
-      if (!entry) throw new Error("No entry???");
-      if (
-        entry.url === undefined && entry.description === undefined &&
-        entry.title === undefined
-      ) return;
+    entries
+      .map((entry) => {
+        if (!entry) throw new Error("No entry???");
+        if (
+          entry.url === undefined &&
+          entry.description === undefined &&
+          entry.title === undefined
+        )
+          return;
 
-      return {
-        url: entry.url,
-        description: utf8.decode(entry.description),
-        title: utf8.decode(entry.title),
-        sponsor: entry.sponsor,
-        web_dev: entry.webdev,
-        created_at: entry.date,
-        tags: entry.tags,
-      };
-    }).filter(Boolean),
+        console.log("Adding entry:", entry);
+
+        const tryDecodeUtf8 = (str: string) => {
+          try {
+            return utf8.decode(str);
+          } catch (e) {
+            console.error(
+              "Failed to decode string. String: \n",
+              str,
+              "\nError: \n",
+              e,
+            );
+            return str;
+          }
+        };
+
+        return {
+          url: entry.url,
+          description: tryDecodeUtf8(entry.description),
+          title: tryDecodeUtf8(entry.title),
+          sponsor: entry.sponsor,
+          web_dev: entry.webdev,
+          created_at: entry.date,
+          tags: entry.tags,
+        };
+      })
+      .filter(Boolean),
   );
   if (error) {
     console.error(error.message);
