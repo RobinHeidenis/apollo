@@ -25,7 +25,7 @@ export const Entry: Component<{
             {props.entry.web_dev && (
               <Chip colorClass="bg-green" text="WebDev" />
             )}
-            {!props.entry.title.toLowerCase().endsWith("sponsor") && (
+            {!props.entry.title.toLowerCase().endsWith("(sponsor)") && (
               <Chip
                 text={props.entry.title.match(/\((.*)\)/)[1]}
                 colorClass={"bg-blue"}
