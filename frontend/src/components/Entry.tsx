@@ -27,12 +27,14 @@ export const Entry: Component<{
             )}
             {!props.entry.title.toLowerCase().endsWith("(sponsor)") && (
               <Chip
-                text={props.entry.title.match(/\((.*)\)/)[1]}
+                text={props.entry.title.match(/\((.*?)\)$/)[1]}
                 colorClass={"bg-blue"}
               />
             )}
           </div>
-          <h1 class={"text-2xl"}>{props.entry.title.replace(/\(.*\)$/, "")}</h1>
+          <h1 class={"text-2xl"}>
+            {props.entry.title.replace(/\(.*?\)$/, "")}
+          </h1>
         </div>
         <p class={"mt-1"}>{props.entry.description}</p>
         <p class={"mt-3 flex items-center font-semibold"}>
