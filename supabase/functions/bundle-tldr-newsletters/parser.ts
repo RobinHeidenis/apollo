@@ -5,7 +5,7 @@ import {
   Node,
 } from "https://deno.land/x/deno_dom@v0.1.43/deno-dom-wasm-noinit.ts";
 import { Entry, EntryWithTags } from "../_shared/types.ts";
-import { generateTagsForEntry } from "../_shared/google/generateTagsForEntry.ts";
+import {generateTagsForEntry} from "../_shared/google/generateTagsForEntry.ts";
 
 type NodeWithAttributes = Node & {
   attributes: { name: string; value: string }[];
@@ -88,53 +88,61 @@ export const parseMessages = async (
   messages: { body: string; date: string; from: string }[],
 ) => {
   await initParser();
-  return messages.map((result) => {
-    const document = new DOMParser().parseFromString(result.body, "text/html");
-
-    if (!document) {
-      console.error(result);
-      throw new Error("No document");
-    }
-
-    const entries = getEntries(document);
-    if (entries.length === 0) {
-      console.error(
-        "No entries were found in this newsletter, something might be wrong",
+  return messages
+    .map((result) => {
+      const document = new DOMParser().parseFromString(
+        result.body,
+        "text/html",
       );
-      console.log(result.date);
-    }
 
-    return {
-      from: result.from,
-      date: result.date,
-      entries,
-    };
-  }).map((newsletter) => {
-    return newsletter.entries.map((entry) => {
-      if (!entry.url) {
-        console.error("This entry has no URL", entry);
-        return;
+      if (!document) {
+        console.error(result);
+        throw new Error("No document");
       }
 
-      const { params, decodedUrl } = parseUrl(entry.url);
-
-      return ({
-        ...entry,
-        description: entry.description.trim(),
-        url: decodedUrl.split("?")[0] + (params.length > 0 ? `?${params}` : ""),
-        sponsor: entry.title.toLowerCase().includes("sponsor)"),
-        webdev: newsletter.from.includes("Web Dev"),
-        date: newsletter.date,
-      }) satisfies Entry;
-    }).filter(Boolean);
-  }).map((entries) => {
-    return entries.map(async (entry) => {
-      const generatedEntryWithTags = await generateTagsForEntry(entry);
+      const entries = getEntries(document);
+      if (entries.length === 0) {
+        console.error(
+          "No entries were found in this newsletter, something might be wrong",
+        );
+        console.log(result.date);
+      }
 
       return {
-        ...entry,
-        tags: generatedEntryWithTags.tags,
-      } satisfies EntryWithTags;
-    });
-  });
+        from: result.from,
+        date: result.date,
+        entries,
+      };
+    })
+    .map((newsletter) => {
+      return newsletter.entries
+        .map((entry) => {
+          if (!entry.url) {
+            console.error("This entry has no URL", entry);
+            return;
+          }
+
+          const { params, decodedUrl } = parseUrl(entry.url);
+
+          return {
+            ...entry,
+            description: entry.description.trim(),
+            url:
+              decodedUrl.split("?")[0] +
+              (params.length > 0 ? `?${params}` : ""),
+            sponsor: entry.title.toLowerCase().includes("sponsor)"),
+            webdev: newsletter.from.includes("Web Dev"),
+            date: newsletter.date,
+          } satisfies Entry;
+        })
+        .filter(Boolean);
+    })
+    .map((entries) =>
+      entries.map(async (entry) => {
+        return {
+          ...entry,
+          tags: await generateTagsForEntry(entry),
+        } satisfies EntryWithTags;
+      }),
+    );
 };

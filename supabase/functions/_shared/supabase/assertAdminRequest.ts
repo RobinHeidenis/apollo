@@ -1,5 +1,5 @@
 import { env } from "../env.ts";
 
-export const assertAdminRequest = async (request: Request) =>
+export const assertAdminRequest = (request: Request) =>
   request.headers.get("Authorization") ===
-    "Bearer " + env.SUPABASE_SERVICE_ROLE_KEY;
+  "Bearer " + env.SUPABASE_SERVICE_ROLE_KEY;
