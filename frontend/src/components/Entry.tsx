@@ -27,7 +27,7 @@ export const Entry: Component<{
             )}
             {!props.entry.title.toLowerCase().endsWith("(sponsor)") && (
               <Chip
-                text={props.entry.title.match(/\((.*?)\)$/)[1]}
+                text={props.entry.title.match(/\((.*?)\)$/)?.[1]}
                 colorClass={"bg-blue"}
               />
             )}
