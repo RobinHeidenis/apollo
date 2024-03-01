@@ -5,6 +5,16 @@ import { CgWebsite } from "solid-icons/cg";
 import { AiOutlineTag } from "solid-icons/ai";
 import { BiRegularDollarCircle } from "solid-icons/bi";
 
+/**
+ * Matches the last set of parentheses in a string, ignoring any parentheses before it
+ * 
+ * Examples:
+ * - pgs.sh (Website)
+ * - Some example repo (GitHub Repo)
+ * - With parentheses (or not?) in the middle (2 minute read)
+ */
+const META_INFO_REGEX = /\(([^)]*)\)\s*$/;
+
 export const Entry: Component<{
   entry: NewsletterEntry;
 }> = (props) => {
@@ -27,13 +37,13 @@ export const Entry: Component<{
             )}
             {!props.entry.title.toLowerCase().endsWith("(sponsor)") && (
               <Chip
-                text={props.entry.title.match(/\(([^)]*)\)\s*$/)?.[1]}
+                text={props.entry.title.match(META_INFO_REGEX)?.[1]}
                 colorClass={"bg-blue"}
               />
             )}
           </div>
           <h1 class={"text-2xl"}>
-            {props.entry.title.replace(/\(.*?\)$/, "")}
+            {props.entry.title.replace(META_INFO_REGEX, "").trim()}
           </h1>
         </div>
         <p class={"mt-1"}>{props.entry.description}</p>
