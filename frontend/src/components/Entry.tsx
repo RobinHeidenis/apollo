@@ -1,9 +1,9 @@
-import { Component } from "solid-js";
-import { NewsletterEntry } from "../lib/types";
-import { Chip } from "./Chip";
-import { CgWebsite } from "solid-icons/cg";
-import { AiOutlineTag } from "solid-icons/ai";
-import { BiRegularDollarCircle } from "solid-icons/bi";
+import {Component} from "solid-js";
+import {NewsletterEntry} from "../lib/types";
+import {Chip} from "./Chip";
+import {CgWebsite} from "solid-icons/cg";
+import {AiOutlineTag} from "solid-icons/ai";
+import {BiRegularDollarCircle} from "solid-icons/bi";
 
 /**
  * Matches the last set of parentheses in a string, ignoring any parentheses before it
@@ -56,7 +56,7 @@ export const Entry: Component<{
             .join(".")}
         </p>
         <div class="-ml-1 mt-1 flex flex-wrap">
-          {props.entry.tags.map((tag) => (
+          {props.entry.tags?.map((tag) => (
             <Chip
               colorClass="bg-mauve"
               class="mr-1"

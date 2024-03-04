@@ -5,5 +5,5 @@ export interface NewsletterEntry {
   description: string;
   sponsor: boolean;
   web_dev: boolean;
-  tags: string[];
+  tags: string[] | null;
 }
