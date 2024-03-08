@@ -23,7 +23,7 @@ const addEntriesToSupabase = async (
       .map((entry) => {
         if (!entry) throw new Error("No entry???");
 
-        // We need at least an URL, otherwise it wouldn't make much sense to even add this entry
+        // We need at least a URL, otherwise it wouldn't make much sense to even add this entry
         if (!entry.url) {
           return;
         }
