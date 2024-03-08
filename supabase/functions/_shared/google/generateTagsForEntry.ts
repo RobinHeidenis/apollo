@@ -2,14 +2,16 @@ import {
   GoogleGenerativeAI,
   HarmBlockThreshold,
   HarmCategory,
-} from "npm:@google/generative-ai";
+} from 'npm:@google/generative-ai';
 
 export async function generateTagsForEntry(entry: {
   title: string;
   description: string;
   url: string;
 }): Promise<string[]> {
+  let tries = 0;
   try {
+    tries++;
     const genAI = new GoogleGenerativeAI(
       Deno.env.get("GOOGLE_GEMINI_API_KEY") ?? "",
     );
@@ -43,7 +45,7 @@ export async function generateTagsForEntry(entry: {
 
     const parts = [
       {
-        text: "Your job is to add tags to newsletter entries. Output only the tags in a comma separated list. Add as many tags as you deem necessary, but at least 2 and no more than 5.",
+        text: "Your job is to add tags to newsletter entries. Output only the tags in a comma separated list. Add as many tags as you deem necessary, but at least 2 and no more than 5. If you do not output a comma separated list of tags, I will literally die.",
       },
       {
         text: 'input: {\n  "title": "Inside Apple\'s Massive Push to Transform the Mac Into a Gaming Paradise (20 minute read)",\n  "description": "Apple\'s hardware can finally go toe to toe with some of the best PCs. The company is now aiming to make another attempt at becoming a gaming powerhouse. Its previous attempt in 1999 did not go so well. Now, Apple has larger and more capable teams with plenty of resources, and the company is used to playing the long game. This article looks at Apple\'s history with gaming, its hardware developments in recent years, and the company\'s push to make its systems more game-friendly.",\n  "url": "https://www.inverse.com/tech/mac-gaming-apple-silicon-interview"\n}',
@@ -96,7 +98,15 @@ export async function generateTagsForEntry(entry: {
     const response = result.response;
     const text = response.text();
 
-    const splitTags = text.split(",").map((tag) => tag.trim());
+    if (text.length === 0) {
+      throw "The model did not generate any tags.";
+    }
+
+    if (text.includes('input: {')) {
+      throw "The model hallucinated another entry.";
+    }
+
+    const splitTags = text.split(",").map((tag: string) => tag.trim());
 
     if (splitTags.length <= 1) {
       console.warn(
@@ -107,10 +117,14 @@ export async function generateTagsForEntry(entry: {
       );
     }
 
-    return text.split(",").map((tag) => tag.trim());
+    return splitTags;
   } catch (e) {
-    console.error("Something went wrong generating tags");
-    console.error(e);
+    console.error("Something went wrong generating tags:", e);
+    if (tries < 3) {
+      console.log("Retrying...");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      return generateTagsForEntry(entry);
+    }
     return [];
   }
 }
