@@ -25,6 +25,7 @@ const addEntriesToSupabase = async (
 
         // We need at least a URL, otherwise it wouldn't make much sense to even add this entry
         if (!entry.url) {
+          console.warn("Entry does not have a URL, discarding", entry);
           return;
         }
 
