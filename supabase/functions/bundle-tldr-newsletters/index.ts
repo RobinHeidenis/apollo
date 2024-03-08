@@ -22,12 +22,16 @@ const addEntriesToSupabase = async (
     entries
       .map((entry) => {
         if (!entry) throw new Error("No entry???");
-        if (
-          entry.url === undefined &&
-          entry.description === undefined &&
-          entry.title === undefined
-        )
+
+        // We need at least a URL, otherwise it wouldn't make much sense to even add this entry
+        if (!entry.url) {
+          console.warn("Entry does not have a URL, discarding", entry);
           return;
+        }
+
+        if (entry.title === undefined && entry.description === undefined) {
+          return;
+        }
 
         console.log("Adding entry:", entry);
 
