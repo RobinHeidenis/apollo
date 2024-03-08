@@ -1,13 +1,13 @@
-import {Component} from "solid-js";
-import {NewsletterEntry} from "../lib/types";
-import {Chip} from "./Chip";
-import {CgWebsite} from "solid-icons/cg";
-import {AiOutlineTag} from "solid-icons/ai";
-import {BiRegularDollarCircle} from "solid-icons/bi";
+import { Component } from "solid-js";
+import { NewsletterEntry } from "../lib/types";
+import { Chip } from "./Chip";
+import { CgWebsite } from "solid-icons/cg";
+import { AiOutlineTag } from "solid-icons/ai";
+import { BiRegularDollarCircle } from "solid-icons/bi";
 
 /**
  * Matches the last set of parentheses in a string, ignoring any parentheses before it
- * 
+ *
  * Examples:
  * - pgs.sh (Website)
  * - Some example repo (GitHub Repo)
@@ -24,7 +24,7 @@ export const Entry: Component<{
     >
       <a href={props.entry.url} target={"_blank"}>
         <div>
-          <div class={"-ml-1 md:float-right md:ml-3"}>
+          <div class={"-ml-1 flex items-center md:float-right md:ml-3"}>
             {props.entry.sponsor && (
               <Chip
                 colorClass="bg-red"
